@@ -1,0 +1,93 @@
+#+PROPERTY: header-args:julia  :session *julia*
+* Initialize Julia environment
+** Install required packages, LinearAlgebra, SparseArrays, Plots, https://github.com/VMLS-book/VMLS.jl
+#+NAME: install_julia_Pkgs
+#+BEGIN_SRC julia :results output
+  using Pkg;
+  Pkg.activate("../.");
+  Pkg.instantiate();
+  Pkg.add(["LinearAlgebra","SparseArrays","Plots"]);
+  Pkg.add(url="https://github.com/VMLS-book/VMLS.jl");
+  Pkg.status();
+#+END_SRC
+
+#+RESULTS: install_julia_Pkgs
+: Project ENGR108 v0.1.0
+: Status `~/projects/julia/ENGR108/Project.toml`
+:   [336ed68f] CSV v0.10.4
+:   [91a5bcdd] Plots v1.31.7
+:   [44dac47c] VMLS v0.4.0 `https://github.com/VMLS-book/VMLS.jl#master`
+:   [37e2e46d] LinearAlgebra
+:   [2f01184e] SparseArrays
+
+** Using required julia packages
+#+NAME: using_julia_Pkgs
+#+begin_src julia :results output
+  using LinearAlgebra, SparseArrays, Plots, VMLS;
+#+end_src
+
+#+RESULTS: using_julia_Pkgs
+: norm of the array [-1.045456450168053, -0.4380823912834939] is 1.133532253952507
+** Test Loaded julia packages by using norm()
+#+begin_src julia :results output
+  a = randn(2);
+  println("norm of the vector $(a) is $(norm(a))");
+#+end_src
+
+#+RESULTS:
+: norm of the vector [-0.45745262803328973, -0.14187233915412772] is 0.4789474579863925
+
+#+BEGIN_SRC julia :results file graphics :file plot.png :output-dir figs
+  scatter(rand(100), rand(100))
+  savefig("figs/plot.png")
+#+END_SRC
+
+#+RESULTS:
+[[file:figs/plot.png]]
+
+* Basis
+
+*Cash flow replication*. Let’s consider cash flows over 3 periods, given by 3-vectors. We know from VMLS page 93 that the vectors. We know from VMLS page 93 that the vectors
+
+
+\begin{equation}
+e_{1} =
+  \begin{bmatrix}
+  1 \\
+  0 \\
+  0
+  \end{bmatrix}, 
+l_{1} =
+ \begin{bmatrix}
+ 1 \\
+ -(1+r) \\
+ 0
+ \end{bmatrix},
+l_{2} =
+\begin{bmatrix}
+0 \\
+1 \\
+-(1+r)
+\end{bmatrix}
+\end{equation}
+
+form a basis, where r is the (positive) per-period interest rate. The first vector \[e_{1} \] is a single payment of $1 in period (time) t = 1. The second vector $l_{1}$ is loan of $1 in period t = 1, paid back in period t = 2 with interest r. The third vector \[l_{2}\] is loan of $1 in period t = 2, paid back in period t = 3 with interest r. Let’s use this basis to replicate the cash flow c = (1, 2, −3) as
+
+
+#+begin_src julia :results value :noweb yes
+  #using LinearAlgebra;
+  r = 0.05;
+  e1 = [1,0,0]; l1 = [1,-(1+r),0]; l2 = [0,1,-(1+r)];
+  c = [1,2,-3];
+  # Coefficients of expansion
+  alpha3 = -c[3]/(1+r);
+  alpha2 = -c[2]/(1+r) -c[3]/(1+r)^2;
+  alpha1 = c[1] + c[2]/(1+r) + c[3]/(1+r)^2;  # NPV of cash flow
+  n1 = norm(e1);
+  n1;
+  
+#+end_src
+
+#+RESULTS:
+: 1.0
+
