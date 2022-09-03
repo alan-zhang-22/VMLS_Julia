@@ -7,14 +7,14 @@
   Pkg.activate("../.");
   Pkg.instantiate();
   Pkg.add(["LinearAlgebra","SparseArrays","Plots"]);
+  ENV["JULIA_SSL_CA_ROOTS_PATH"]=""
   Pkg.add(url="https://github.com/VMLS-book/VMLS.jl");
   Pkg.status();
 #+END_SRC
 
 #+RESULTS: install_julia_Pkgs
-: Project ENGR108 v0.1.0
-: Status `~/projects/julia/ENGR108/Project.toml`
-:   [336ed68f] CSV v0.10.4
+:     Fetching: [>                                        ]  0.0 %    Fetching: [========================>                ]  58.5 %    Fetching: [=========================>               ]  60.4 %    Fetching: [=============================>           ]  71.7 %    Fetching: [==============================>          ]  73.6 %    Fetching: [>                                        ]  0.0 %Project VMLS_Julia v0.1.0
+: Status `~/Math/VMLS_Julia/Project.toml`
 :   [91a5bcdd] Plots v1.31.7
 :   [44dac47c] VMLS v0.4.0 `https://github.com/VMLS-book/VMLS.jl#master`
 :   [37e2e46d] LinearAlgebra
